@@ -1,0 +1,3 @@
+People can use many online resource to see a house price like Zillow and Trulia when they want to buy a house or invest a house, however, most of people doesn’t know is the house overvalued or undervalued. The property price will be effected by many factors like the distance to central city, the population, is a good school near the house, is near to supermarket, etc.
+Therefore, we want to analyze those features and add the factors to  our machine learning model, then use our model to predict that is the house price overvalued or undervalued.
+
