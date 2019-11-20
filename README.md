@@ -8,18 +8,19 @@ We need to add geographical columns for every property. How to run:
 1. There is some setup necessary before acquiring the data:
     1. Install Python 3
     2. Create a virtual environment if you don't have one. To create one, go to the project root and run 
-   ```
-   python3 -m venv .env
-   ```
-   3. Once you have your virtual environment activate it via
-   ```
-   source .env/bin/activate
-   ```
-   *Note:* You'll need to activate your environment each time.
-   4. Install the necessary packages via
-   ```
-   pip install -r requirements.txt
-   ```
+        ```
+        python3 -m venv .env
+        ```
+    3. Once you have your virtual environment activate it via
+        ```
+        source .env/bin/activate
+        ```
+        *Note:* You'll need to activate your environment each time.
+    
+    4. Install the necessary packages via
+    ```
+    pip install -r requirements.txt
+    ```
    
 2. Acquire an API key for Foursquare and replace the `client_secret` and `client_id` with the
 one Foursquare gives you and change it in `runner.py`.
