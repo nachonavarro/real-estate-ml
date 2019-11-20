@@ -1,0 +1,9 @@
+# The categories to consider. The full list can be found here:
+# https://developer.foursquare.com/docs/resources/categories
+
+- category: museum
+  id: 4bf58dd8d48988d181941735
+- category: gas_station
+  id: 4bf58dd8d48988d113951735
+- category: coffee_shop
+  id: 4bf58dd8d48988d1e0931735

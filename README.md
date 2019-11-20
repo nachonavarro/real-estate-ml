@@ -1,9 +1,49 @@
 # real-estate-ml
 Using geospatial data to find investment opportunities in the real estate market
 
-# Tasks
+## Acquiring the data
 
-  1. Clean the dataset we already have. We need to decide what columns to keep and what columns to discard, what rows to filter (some properties are listed with a sale price of 1 dollar, we need to get rid of stuff like that).
-  2. * Determine which geographical features we're going to include (proximity to a river, number of coffee places, supermarkets, etc)
-     * We need to merge that dataset with another one we create that gives geographical features about the place. I'm assuming the way to go here is to call the Google Maps API, but we can research more alternatives.
-  
+We need to add geographical columns for every property. How to run:
+
+1. There is some setup necessary before acquiring the data:
+    1. Install Python 3
+    2. Create a virtual environment if you don't have one. To create one, go to the project root and run 
+   ```
+   python3 -m venv .env
+   ```
+   3. Once you have your virtual environment activate it via
+   ```
+   source .env/bin/activate
+   ```
+   *Note:* You'll need to activate your environment each time.
+   4. Install the necessary packages via
+   ```
+   pip install -r requirements.txt
+   ```
+   
+2. Acquire an API key for Foursquare and replace the `client_secret` and `client_id` with the
+one Foursquare gives you and change it in `runner.py`.
+3.  Finally, run 
+```
+python -m properties.data.runner 0 10
+```
+where the numbers indicate from which property to start and end. If you start running and
+stop midway through for whatever reason (e.g. a crash or you've reached the daily API limit call),
+call the script again but pass in the flag `--reuse` so that you don't create a new database.
+
+## Once you have the data
+
+Once you have the data you'll see a new SQLite database on the `data` folder. When we have all the properties
+filled up we'll merge all of the databases back into one. At the moment we can't do this do to the API limit
+restriction, and in this way we can work in parallel.
+
+If you want to play around with the contents of the database as a pandas dataframe, do the following:
+
+```python
+from properties.data.database import DatabaseContext
+
+db = DatabaseContext('properties0_10') # the name of the database to link up
+df = db.as_df()
+```
+
+And you should be good to go!
