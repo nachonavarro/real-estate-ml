@@ -73,7 +73,7 @@ class Property(BaseModel):
         :param start: The index of the first row to include
         :param end: The index of the last row to include
         """
-        with open('data/properties.csv', 'r') as f:
+        with open('data/south_philly_properties.csv', 'r') as f:
             dataset = csv.reader(f)
             header = next(dataset)
             data_source = [{h: r for h, r in zip(header, row)} for row in islice(dataset, start, end)]

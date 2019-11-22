@@ -1,4 +1,5 @@
 import argparse
+import time
 
 from foursquare import Foursquare, RateLimitExceeded
 from properties.data.database import DatabaseContext
@@ -39,9 +40,9 @@ class Runner:
             self.db_context.create_db()
             Property.from_csv(start, end)
         Category.update_categories()
-        self.transfer_geo_data(start, verbose)
+        self.transfer_geo_data(verbose)
 
-    def transfer_geo_data(self, start, verbose):
+    def transfer_geo_data(self, verbose):
         """
         Goes through all properties that still need their geo columns filled (via partial_properties())
         calling the API on each geo column. For instance, if the geo columns are bank, park, and movie theater,
@@ -57,13 +58,17 @@ class Runner:
             origin = (row.latitude, row.longitude)
             for category in Category.select():
                 if getattr(row, category.category) is None:
-                    try:
-                        closest = self.get_closest_poi(origin, category)
-                        setattr(row, category.category, closest)
-                        if verbose:
-                            print(f'\t{category.category} ({closest}m) ✓')
-                    except RateLimitExceeded:
-                        raise RateLimitExceeded(f'Stopped recording on row {start + i}.')
+                    while True:
+                        try:
+                            closest = self.get_closest_poi(origin, category)
+                            setattr(row, category.category, closest)
+                            if verbose:
+                                print(f'\t{category.category} ({closest}m) ✓')
+                        except RateLimitExceeded:
+                            print("Exceeded limit. Sleeping for 5 minutes...")
+                            time.sleep(5 * 60)
+                            continue
+                        break
             row.save()
             if verbose:
                 print()

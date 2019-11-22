@@ -32,6 +32,14 @@ where the numbers indicate from which property to start and end. If you start ru
 stop midway through for whatever reason (e.g. a crash or you've reached the daily API limit call),
 call the script again but pass in the flag `--reuse` so that you don't create a new database.
 
+## Dividing the task of finding the data
+
+We'll divide the the properties into three so that we can call the API at the same time.
+
+1. Nikhil: 0-2600
+2. Chih: 2601-5200
+3. Nacho: 5201-8039
+
 ## Once you have the data
 
 Once you have the data you'll see a new SQLite database on the `data` folder. When we have all the properties
