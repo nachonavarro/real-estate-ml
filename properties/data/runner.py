@@ -17,8 +17,8 @@ class Runner:
     def __init__(self):
         self.db_context = None
         self.client = Foursquare(
-            client_id='UG120RKSOCA55CY5TMWF1QBLXV1W1UWDPAUJADAYCYO1TLRK',
-            client_secret='3JLP5BDEL1YZH1U14JOIZMCQ4WICTG51PPN2ENP4MW1FVU34'
+            client_id='4BCP14BAZCUWOEOBF5KEDFJJHSMY1MYS1FDQIFM45OQUHBFZ',
+            client_secret='SY2LZONNB0PMHTYKSZZGUKZVSUIQMQUTB4IYBR02UUAO5BRZ'
         )
 
     def run(self, start, end, create=True, verbose=True):
