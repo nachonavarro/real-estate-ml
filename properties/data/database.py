@@ -25,5 +25,5 @@ class DatabaseContext:
         :return: A DataFrame with all the properties and their geographical features.
         """
         with self.db:
-            df = pd.read_sql('SELECT * FROM properties', self.db.connection(), index_col='id')
+            df = pd.read_sql('SELECT * FROM properties', self.db.connection())
         return df
