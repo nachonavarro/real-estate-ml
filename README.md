@@ -51,7 +51,7 @@ If you want to play around with the contents of the database as a pandas datafra
 ```python
 from properties.data.database import DatabaseContext
 
-db = DatabaseContext('properties0_10') # the name of the database to link up
+db = DatabaseContext('properties') # the name of the database to link up
 df = db.as_df()
 ```
 
