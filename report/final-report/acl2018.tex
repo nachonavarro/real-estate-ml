@@ -5,6 +5,8 @@
 \usepackage{amsfonts}
 \usepackage{times}
 \usepackage{latexsym}
+\usepackage{placeins}
+\usepackage{subfig}
 
 \usepackage{url}
 
@@ -195,7 +197,7 @@ price of \$324,662.
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.5\textwidth]{properties_sale_price}
+\includegraphics[width=0.5\textwidth]{result-data/properties_sale_price}
 \caption{Distribution by sale price}
 \label{fig:distribution}
 \end{figure}
@@ -206,7 +208,7 @@ sale price (Figure \ref{fig:heatmap}).
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.5\textwidth]{heatmap}
+\includegraphics[width=0.5\textwidth]{result-data/heatmap}
 \caption{Heatmap of South Philadelphia (hotter means higher
 sale price)}
 \label{fig:heatmap}
@@ -219,7 +221,7 @@ matrix which can be seen in Figure \ref{fig:corr}. For instance, there is a stro
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.5\textwidth]{correlation_matrix}
+\includegraphics[width=0.5\textwidth]{result-data/correlation_matrix}
 \caption{Correlation matrix}
 \label{fig:corr}
 \end{figure}
@@ -227,19 +229,135 @@ matrix which can be seen in Figure \ref{fig:corr}. For instance, there is a stro
 
 \section{Models}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\subsection{Experimental Models Setup}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+\subsection{Results and Findings}
+
+\begin{figure}[h]
+\includegraphics[width=0.5\textwidth]{result-data/tolerance20.png}
+\caption{Accuracy comparison for five learning models which are used to predict the cheap, moderate, expensive house.}
+\label{fig:tolerance20}
+\centering
+\end{figure}
+Using the geospatial features and direct factors (number of bedrooms, spaces, etc) to train five learning model: Support Vector Regression, Linear Regression, Multi-Layer Perceptron Regression, Regression Tree and KNeighbor Regrsssion, the accuracy with 20\% tolerance for each model are listed in Figure~\ref{fig:tolerance20}. According to the result, the five models have almost the same accuracy to predict cheap house and moderate house. However, there are only three models: Linear Regression, Multi-Layer Perceptron Regression and Regression Tree, have better accuracy to predict expensive house. 
+
+In order to find which is the best performance model, the three best learning model: Linear Regression, Multi-Layer Perceptron Regression and Regression Tree will be used to predict the properties price with lower tolerance for further analysis. And the comparison between prediction data and test data will be discussed in next section.
+
+
+\FloatBarrier
+\subsection{Find the Best Model}
+In previous analysis, the three models with higher accuracy are Linear Regression, Multi-Layer Perceptron Regression and Regression Tree will be selected to predict the properties price with 15\% tolerance. The result is shown in Figure~\ref{fig:tolerance15}. 
+\begin{figure}[h]
+\includegraphics[width=0.5\textwidth]{result-data/tolerance15.png}
+\caption{Accuracy comparison for three learning models which have better performance in previous prediction result.}
+\label{fig:tolerance15}
+\centering
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \subfloat[Prediction data for cheap house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/linear25p.png}%
+        \label{fig:a}%
+    }%
+    \hfill%
+    \subfloat[Test data for cheap house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/linear25t.png}%
+        \label{fig:b}%
+    }
+    \caption{Prediction and test data distribution comparison for cheap house by using linear regression model.}
+    \label{fig:linearcheap}
+\end{figure}
+
+The accuracy decreasing with the tolerance 15\% for three models, and it is obvious that Linear Regression and Regression Tree model have better accuracy performance than Multi-Layer Perceptron Regression model. In order to find which one is the best model, analyze the prediction data and test data distribution to see which model can mimic the test data distribution. First, the prediction data distribution are show in Figure~\ref{fig:linearcheap}, Figure~\ref{fig:linearmoderate}, Figure~\ref{fig:linearexpensive}
+
+\begin{figure}[h]
+    \centering
+    \subfloat[Prediction data for moderate house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/linear50p.png}%
+        \label{fig:a}%
+    }%
+    \hfill%
+    \subfloat[Test data for moderate house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/linear50t.png}%
+        \label{fig:b}%
+    }
+    \caption{Prediction and test data distribution comparison for moderate house by using linear regression model.}
+    \label{fig:linearmoderate}
+\end{figure}
+
+According the result which are shown in the figure, Linear Regression model predict the cheap and moderate properties price in a small range which can't represent the true test data. Only expensive house result have the similar distribution between prediction and test data.
+
+\begin{figure}[h]
+    \centering
+    \subfloat[Prediction data for expensive house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/linear75p.png}%
+        \label{fig:a}%
+    }%
+    \hfill%
+    \subfloat[Test data for expensive house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/linear75p.png}%
+        \label{fig:b}%
+    }
+    \caption{Prediction and test data distribution comparison for expensive house by using linear regression model.}
+    \label{fig:linearexpensive}
+\end{figure}
+
+
+\FloatBarrier
+After comparing the distribution for prediction data and test data by using Linear Regression model, then examine the data distribution result by using regression tree learning model. The data distribution are listed in Figure~\ref{fig:regtreecheap}, Figure~\ref{fig:regtreemoderate}, Figure~\ref{fig:regtreemexpensive}, they are very similar between prediction data and test data in three group house. Even the accuracy seems no difference by comparing linear regression and regression tree model, the prediction data have a better prediction properties price range by using regression tree model.
+
+\begin{figure}[h]
+    \centering
+    \subfloat[Prediction data for cheap house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/regtree25p.png}%
+        \label{fig:a}%
+    }%
+    \hfill%
+    \subfloat[Test data for cheap house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/regtree25t.png}%
+        \label{fig:b}%
+    }
+    \caption{Prediction and test data distribution comparison for cheap house by using regression tree model.}
+    \label{fig:regtreecheap}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \subfloat[Prediction data for moderate house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/regtree50p.png}%
+        \label{fig:a}%
+    }%
+    \hfill%
+    \subfloat[Test data for moderate house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/regtree50t.png}%
+        \label{fig:b}%
+    }
+    \caption{Prediction and test data distribution comparison for moderate house by using regression tree model.}
+    \label{fig:regtreemoderate}
+\end{figure}
+\FloatBarrier
+By examining the two best model and analyze the data distribution for prediction and test data, regression tree model can capture the properties price distribution characteristics. Therefore, the best model to predict the house price will be regression tree model by using our features to train.
+\FloatBarrier
+\begin{figure}[h]
+    \centering
+    \subfloat[Prediction data for expensive house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/regtree75p.png}%
+        \label{fig:a}%
+    }%
+    \hfill%
+    \subfloat[Test data for expensive house]{%
+        \includegraphics[width=0.24\textwidth]{result-data/regtree75t.png}%
+        \label{fig:b}%
+    }
+    \caption{Prediction and test data distribution comparison for expensive house by using regression tree model.}
+    \label{fig:regtreemexpensive}
+\end{figure}
+
+
+
+\FloatBarrier
+
+
 
 \section{Conclusion}
 
