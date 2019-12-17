@@ -231,6 +231,17 @@ matrix which can be seen in Figure \ref{fig:corr}. For instance, there is a stro
 
 \subsection{Experimental Models Setup}
 
+We wanted to formulate this as a regression problem by using \textit{Sale Price} as a target label and training on the features collected for our housing dataset. To do this, we decided to train the following 5 different regression models: Support Vector Regression, Linear Regression, Multi-Layer Perceptron, Regression Tree and KNeighbor Regression.
+
+\medskip
+
+From here, we wanted to evaluate our model in a meaningful way without looking at an MSE Error value that is visually insignificant to us. Additionally, we needed a relative error metric since a \$50000 error on a \$100000 property is much worse than a \$50000 error on a \$1000000 property. We used our own error metric which classifies a prediction as good if a predicted \textit{Sale Price} is within a given tolerance (ex. 20\%) of the ground-truth \textit{Sale Price} and bad otherwise. 
+
+\medskip
+
+We initially trained one model on the entire training dataset but saw that this treated the higher priced houses as outliers. To account for this, we segmented the training data into three segments (cheap, moderate, expensive) and fit a separate model for each segment, resulting in 3 models to cover the entire dataset. This works because our project aims to predict how much a house on the market is actually worth; we should featurize a currently listed house and then based on its List Price set by the owner, we place it into the "cheap", "moderate" or "expensive" bucket; then, the corresponding model predicts its worth so we can see if it is being undervalued or overvalued. The key assumption we make here is that the predicted \textit{Sale Price} should not deviate from the bucket that the \textit{List Price} was placed into. 
+We see now our experimental findings below.
+
 \subsection{Results and Findings}
 
 \begin{figure}[h]
@@ -361,15 +372,27 @@ By examining the two best model and analyze the data distribution for prediction
 
 \section{Conclusion}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+From our models we were able to see that Regression Tree was able to perform the best from training on our features. Under the hood, we checked to see which features it prioritized and were able to find that the geospatial attributes that the most important were 'bus\_stop', 'laundromat', 'university', 'park', 'river', 'train\_station' and 'stadium'. These were in some cases even more important than the direct features. This shows that the collected geospatial features do have an impact in determining housing prices as our best models weighted them heavily.
+
+\medskip
+
+Our most important finding here was the model's improvement in accuracy while using geospatial features over using only the direct features (such as livable area, bedrooms, etc.). We found that the test accuracy increased on average by around 30\% just by adding these new features. This gives us the result we were looking for: geospatial features do have a significant impact on property sale price. 
+
+\medskip
+
+Despite this finding, our models trained on the geospatial features did not perform well enough to accurately predict the true value of housing prices as the accuracy only reached about 70\% on relatively high tolerance thresholds of 15-20\%. This could be because of hidden variables that overpower our collected features, such as crime rate, quality of school district, etc. that we don’t consider. As such, we conclude that geospatial features do have an impact on property sale prices but are not sufficient on their own to predict house prices, although it’s a great initial feature space to investigate and adding additional types of features would only improve a resulting model’s usability in real-world scenarios.
 
 \subsection{Future Work}
 
+Some work that can be done on this project includes adding these hidden factors such as crime rate and school district quality that may increase the effectiveness of our model as well as the usefulness of the geospatial features we've provided.
+
+\medskip
+
+Additionally, we can try some more powerful regression models that may be able to capture the solution to our problem better; for this project, we used the same models as the ones in the paper for Madrid housing \cite{bergadano2019learning} but we may be able to do better.
+
+\medskip
+
+Lastly, we can also compare our trained model with an existing industry model such as Zillow's and see how close we are to emulating their price prediction.
 
 \bibliographystyle{acl_natbib}
 \bibliography{acl2018}
