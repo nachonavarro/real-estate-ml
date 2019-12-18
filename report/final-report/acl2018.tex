@@ -50,7 +50,7 @@ Traditionally, real estate valuation has concentrated on assessing the
 features directly surrounding the property to come up with a price.
 Straightforward features such as number of bedrooms, whether the property
 has a pool or a garage space, or even the number of bathrooms play a major
-contribution on the price. And while that makes perfect sense, private
+contribution on the price. And while that does play an important role, private
 sellers may not fully realize that the property's surroundings can also
 play a role. Points of interest like supermarkets, museums, parks, cafes,
 or police stations can affect house prices but many times these may be
@@ -138,7 +138,7 @@ the \texttt{properties/data} package.
 
 The list of final features that we feed our model are in
 Table \ref{tab:features} for a total of 5 categorical
-and 28 numerical.
+and 28 numerical (nearest point of interest in meters).
 
 \begin{table}[]
 \centering
@@ -231,33 +231,29 @@ matrix which can be seen in Figure \ref{fig:corr}. For instance, there is a stro
 
 \subsection{Experimental Models Setup}
 
-We wanted to formulate this as a regression problem by using \textit{Sale Price} as a target label and training on the features collected for our housing dataset. To do this, we decided to train the following 5 different regression models: Support Vector Regression, Linear Regression, Multi-Layer Perceptron, Regression Tree and KNeighbor Regression.
+We wanted to formulate this as a regression problem by using \textbf{sale price} as a target label and training on the features collected for our housing dataset. To do this, we decided to train the following 5 different regression models: Support Vector Regression, Linear Regression, Multi-Layer Perceptron, Regression Tree and KNeighbor Regression.
 
 \medskip
 
-From here, we wanted to evaluate our model in a meaningful way without looking at an MSE Error value that is visually insignificant to us. Additionally, we needed a relative error metric since a \$50000 error on a \$100000 property is much worse than a \$50000 error on a \$1000000 property. We used our own error metric which classifies a prediction as good if a predicted \textit{Sale Price} is within a given tolerance (ex. 20\%) of the ground-truth \textit{Sale Price} and bad otherwise. 
+From here, we wanted to evaluate our model in a meaningful way without looking at an MSE Error value that is visually insignificant to us. Additionally, we needed a relative error metric since a \$50,000 error on a \$100,000 property is much worse than a \$50000 error on a \$1,000,000 property. We used our own error metric which classifies a prediction as good if a predicted sale price is within a given tolerance (e.g. 20\%) of the ground-truth sale price and bad otherwise. 
 
 \medskip
 
-We initially trained one model on the entire training dataset but saw that this treated the higher priced houses as outliers. To account for this, we segmented the training data into three segments (cheap, moderate, expensive) and fit a separate model for each segment, resulting in 3 models to cover the entire dataset. This works because our project aims to predict how much a house on the market is actually worth; we should featurize a currently listed house and then based on its List Price set by the owner, we place it into the "cheap", "moderate" or "expensive" bucket; then, the corresponding model predicts its worth so we can see if it is being undervalued or overvalued. The key assumption we make here is that the predicted \textit{Sale Price} should not deviate from the bucket that the \textit{List Price} was placed into. 
+We initially trained one model on the entire training dataset but saw that this treated the higher priced houses as outliers. To account for this, we segmented the training data into three segments (cheap, moderate, expensive) and fit a separate model for each segment, resulting in 3 models to cover the entire dataset. This works because our project aims to predict how much a house on the market is actually worth; we should featurize a currently listed house and then based on its list price set by the owner, we place it into the ``cheap'', ``moderate'' or ``expensive'' bucket; then, the corresponding model predicts its worth so we can see if it is being undervalued or overvalued. The key assumption we make here is that the predicted \textit{Sale Price} should not deviate from the bucket that the \textit{List Price} was placed into. 
 We see now our experimental findings below.
 
 \subsection{Results and Findings}
 
 \begin{figure}[h]
 \includegraphics[width=0.5\textwidth]{result-data/tolerance20.png}
-\caption{Accuracy comparison for five learning models which are used to predict the cheap, moderate, expensive house.}
+\caption{Accuracy comparison for five learning models which are used to predict the cheap, moderate, expensive properties.}
 \label{fig:tolerance20}
 \centering
 \end{figure}
-Using the geospatial features and direct factors (number of bedrooms, spaces, etc) to train five learning model: Support Vector Regression, Linear Regression, Multi-Layer Perceptron Regression, Regression Tree and KNeighbor Regrsssion, the accuracy with 20\% tolerance for each model are listed in Figure~\ref{fig:tolerance20}. According to the result, the five models have almost the same accuracy to predict cheap house and moderate house. However, there are only three models: Linear Regression, Multi-Layer Perceptron Regression and Regression Tree, have better accuracy to predict expensive house. 
+Using the geospatial features and direct factors (number of bedrooms, spaces, etc) to train five learning models with a 20\% tolerance for each model is listed in Figure~\ref{fig:tolerance20}. According to the result, the five models have almost the same accuracy to predict cheap properties and moderate properties. However, there we consistently see three models (Linear Regression, Multi-Layer Perceptron Regression and Regression Tree) that have better accuracy to predict expensive house. 
 
-In order to find which is the best performance model, the three best learning model: Linear Regression, Multi-Layer Perceptron Regression and Regression Tree will be used to predict the properties price with lower tolerance for further analysis. And the comparison between prediction data and test data will be discussed in next section.
-
-
-\FloatBarrier
-\subsection{Find the Best Model}
-In previous analysis, the three models with higher accuracy are Linear Regression, Multi-Layer Perceptron Regression and Regression Tree will be selected to predict the properties price with 15\% tolerance. The result is shown in Figure~\ref{fig:tolerance15}. 
+\subsection{Finding the Best Model}
+We took these three models and retrained using a lower tolerance (15\%). The result is shown in Figure~\ref{fig:tolerance15}. 
 \begin{figure}[h]
 \includegraphics[width=0.5\textwidth]{result-data/tolerance15.png}
 \caption{Accuracy comparison for three learning models which have better performance in previous prediction result.}
@@ -280,7 +276,8 @@ In previous analysis, the three models with higher accuracy are Linear Regressio
     \label{fig:linearcheap}
 \end{figure}
 
-The accuracy decreasing with the tolerance 15\% for three models, and it is obvious that Linear Regression and Regression Tree model have better accuracy performance than Multi-Layer Perceptron Regression model. In order to find which one is the best model, analyze the prediction data and test data distribution to see which model can mimic the test data distribution. First, the prediction data distribution are show in Figure~\ref{fig:linearcheap}, Figure~\ref{fig:linearmoderate}, Figure~\ref{fig:linearexpensive}
+The accuracy decreased with a tolerance of 15\% for three models, and by inspection we see that Linear Regression and Regression Tree model have a better accuracy than Multi-Layer Perceptron Regression. Furthermore, we analyzed the prediction data and test data distribution to visually see the resemblence between the training and the test data distribution
+given a model. For instance, the prediction data distribution are shown in Figure~\ref{fig:linearcheap}, Figure~\ref{fig:linearmoderate}, Figure~\ref{fig:linearexpensive} for different models.
 
 \begin{figure}[h]
     \centering
@@ -316,7 +313,7 @@ According the result which are shown in the figure, Linear Regression model pred
 
 
 \FloatBarrier
-After comparing the distribution for prediction data and test data by using Linear Regression model, then examine the data distribution result by using regression tree learning model. The data distribution are listed in Figure~\ref{fig:regtreecheap}, Figure~\ref{fig:regtreemoderate}, Figure~\ref{fig:regtreemexpensive}, they are very similar between prediction data and test data in three group house. Even the accuracy seems no difference by comparing linear regression and regression tree model, the prediction data have a better prediction properties price range by using regression tree model.
+After comparing the distribution for the training data and the test data by using Linear Regression model, we then examined the data distribution result by using regression tree learning model. The data distribution is listed in Figure~\ref{fig:regtreecheap}, Figure~\ref{fig:regtreemoderate}, Figure~\ref{fig:regtreemexpensive}. We can see the data is pretty consistent for the three ranges of properties. 
 
 \begin{figure}[h]
     \centering
